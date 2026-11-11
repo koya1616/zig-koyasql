@@ -1,0 +1,8 @@
+# direnv / nix
+.direnv/
+result
+result-*
+
+# zig
+.zig-cache/
+zig-out/
