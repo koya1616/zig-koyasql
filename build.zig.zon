@@ -1,0 +1,12 @@
+.{
+    .name = .koyasql,
+    .version = "0.0.0",
+    .minimum_zig_version = "0.17.1",
+    .fingerprint = 0xbeb0dbfb5f5d87a8,
+    .dependencies = .{},
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+    },
+}
