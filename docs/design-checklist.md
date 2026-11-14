@@ -9,6 +9,7 @@
 - [x] B+木（MySQL などで一般的）を採用する → [ADR 0001](adr/0001-storage-engine-b-plus-tree.md)
 - [x] LSM ツリー（書込最適化）は現時点で採用しないと判断 → [ADR 0002](adr/0002-lsm-tree-adoption-decision.md)
 - [x] 単純なアペンドオンリー（ログ型）は主ストレージとして採用しないと判断（WAL・追記専用データには採用） → [ADR 0003](adr/0003-append-only-log-adoption-decision.md)
+- [x] Compaction 方式に L0 tiered + L1 以降 leveled を採用し、世代管理を設計 → [ADR 0004](adr/0004-compaction-strategy.md)
 - [x] 対象ワークロード（読み込み重視 / 書き込み重視）を整理 → 読み書き両方を重視
 
 #### 1.1.1 書き込み経路（memtable + バックグラウンド Compaction）と最適化項目（[ADR 0001](adr/0001-storage-engine-b-plus-tree.md) で明記）
@@ -21,6 +22,18 @@
 - [ ] デデュプリケーション（重複排除）
 - [ ] 圧縮（ページ / セグメント単位、プレフィックス圧縮）
 - [ ] 同時実行制御（Concurrency Control）の最適化
+
+#### 1.1.2 Compaction 方式と世代管理（[ADR 0004](adr/0004-compaction-strategy.md)）
+
+- [x] L0 tiered + L1 以降 leveled を採用
+- [x] パラメータ初期値（memtable 64MiB / L0 4 本 / T=10 / base 256MiB / セグメント 64MiB）
+- [ ] L0 の Compaction（全 L0 + 重複 L1 セグメントのマージ、L1 への非重複出力）
+- [ ] Ln → Ln+1 の leveled Compaction（レベル容量・重複セグメント選択）
+- [ ] manifest / VersionEdit によるセグメント世代の管理とクラッシュリカバリ
+- [ ] スナップショット連動の tombstone GC（最下段条件・GC ホライズン）
+- [ ] 参照カウント / エポックベースのセグメント回収
+- [ ] write stall 制御（L0 本数・pending compaction bytes）と IO レート制限
+- [ ] Compaction の可観測性（WA / RA / SA、レベル別サイズ、stall 回数）
 
 ### 1.2 ファイルフォーマット
 

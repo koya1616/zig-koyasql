@@ -107,7 +107,7 @@ p99 レイテンシ SLO、SSD 寿命（WA）、ディスク容量（SA）のど�
 
 ## Open Questions
 
-- Compaction 方式（leveled / tiered / size-tiered）と世代管理（ADR 0001 から継続）
+- Compaction 方式（leveled / tiered / size-tiered）と世代管理（ADR 0001 から継続） → [ADR 0004](0004-compaction-strategy.md) で決定
 - SSTable セグメントを比較実装する場合の評価用ワークロードと指標の定義
 
 ## Revisit Conditions

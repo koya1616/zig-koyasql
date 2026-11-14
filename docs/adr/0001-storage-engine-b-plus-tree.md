@@ -130,7 +130,7 @@ Compaction が最終的に書き出すセグメントは、**不変の B+木**�
 
 ## Open Questions
 
-- Compaction の方式（leveled / tiered / size-tiered）と世代管理
+- Compaction の方式（leveled / tiered / size-tiered）と世代管理 → [ADR 0004](0004-compaction-strategy.md) で決定
 - クラスタ化インデックス（InnoDB 型）か、ヒープ + 非クラスタ化 B+木（PostgreSQL 型）か
 - MVCC のバージョンをセグメント内に持つか、Undo / 別領域に置くか
 
