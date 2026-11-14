@@ -1,0 +1,49 @@
+#!/bin/sh
+# Minimal interestingness checker for `zig reduce`.
+# `zig reduce` 用の最小チェッカー。
+#
+#   zig reduce ./checker src/main.zig
+#   zig reduce ./checker broken.zig -- broken.zig
+#
+# exit 0: still fails to compile (interesting) / まだコンパイルエラー（interesting）
+# exit 1: unknown - zig crashed or failed abnormally
+#         unknown - zig のクラッシュ、または異常終了
+# exit 2: compiles cleanly (boring) / コンパイルが通る（boring）
+#
+# Set EXPECT='some error text' to require a specific diagnostic.
+# 特定のエラーだけを残したい場合は EXPECT='...' を指定する。
+
+set -u
+
+case ${1:-} in
+    -h|--help)
+        printf '%s\n' \
+            'usage: ./checker [root_source_file.zig] [extra zig args...]' \
+            '使い方: ./checker [対象ファイル.zig] [zig への追加引数...]'
+        exit 0
+        ;;
+esac
+
+file=${1:-src/main.zig}
+[ $# -gt 0 ] && shift
+
+if [ ! -f "$file" ]; then
+    printf 'checker: file not found: %s\n' "$file" >&2
+    printf 'checker: ファイルが見つかりません: %s\n' "$file" >&2
+    exit 1
+fi
+
+out=$(zig build-exe -fno-emit-bin "$file" "$@" 2>&1)
+status=$?
+
+[ "$status" -eq 0 ] && exit 2
+
+if ! printf '%s\n' "$out" | grep -q 'error:'; then
+    printf 'checker: zig failed without a compile error (unknown)\n' >&2
+    printf 'checker: zig がコンパイルエラー以外で失敗しました（unknown）\n' >&2
+    exit 1
+fi
+
+[ -n "${EXPECT:-}" ] && { printf '%s\n' "$out" | grep -qF -- "$EXPECT" || exit 2; }
+
+exit 0
