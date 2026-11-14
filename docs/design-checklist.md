@@ -8,7 +8,7 @@
 
 - [x] B+木（MySQL などで一般的）を採用する → [ADR 0001](adr/0001-storage-engine-b-plus-tree.md)
 - [x] LSM ツリー（書込最適化）は現時点で採用しないと判断 → [ADR 0002](adr/0002-lsm-tree-adoption-decision.md)
-- [ ] 単純なアペンドオンリー（ログ型）を採用するか判断
+- [x] 単純なアペンドオンリー（ログ型）は主ストレージとして採用しないと判断（WAL・追記専用データには採用） → [ADR 0003](adr/0003-append-only-log-adoption-decision.md)
 - [x] 対象ワークロード（読み込み重視 / 書き込み重視）を整理 → 読み書き両方を重視
 
 #### 1.1.1 書き込み経路（memtable + バックグラウンド Compaction）と最適化項目（[ADR 0001](adr/0001-storage-engine-b-plus-tree.md) で明記）
