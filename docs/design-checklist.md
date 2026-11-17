@@ -17,7 +17,8 @@
 - [x] memtable（追記型バッファ）で書き込みを受け、バックグラウンドの Compaction で B+木セグメントへ反映するアーキテクチャ → [ADR 0001](adr/0001-storage-engine-b-plus-tree.md)
 - [x] memtable のデータ構造にスキップリストを採用（[ADR 0001](adr/0001-storage-engine-b-plus-tree.md)）
 - [x] Compaction 後のセグメントは不変の B+木として構築する（[ADR 0001](adr/0001-storage-engine-b-plus-tree.md)）
-- [ ] メモリ層でのバッファリング / 遅延書き込み
+- [x] メモリ層でのバッファリング（容量計測・ローテーション・immutable の保持本数・flush スケジューリング・WAL との対応） → [ADR 0005](adr/0005-memtable-buffering-and-durability.md)
+- [x] 遅延書き込み（commit の ack 条件・group commit・fsync ポリシー・ディレクトリ fsync） → [ADR 0005](adr/0005-memtable-buffering-and-durability.md)
 - [ ] 書き込み順序の工夫と初期化（シーケンシャル化、ページ / セグメントの事前フォーマット）
 - [ ] デデュプリケーション（重複排除）
 - [ ] 圧縮（ページ / セグメント単位、プレフィックス圧縮）
@@ -129,7 +130,8 @@ SQL 文字列を受け取って実行するまでの一連の流れ。
 
 - [ ] データを直接書き換える前に変更履歴をディスクへ同期する仕組みを実装
 - [ ] ログレコードのフォーマット（LSN、トランザクションID、REDO / UNDO 情報）を設計
-- [ ] ログバッファと fsync のタイミングを決定
+- [x] ログの fsync のタイミングを決定（group commit: 件数上限 + 極短タイムアウト。`sync_commit` で ack 条件を切替） → [ADR 0005](adr/0005-memtable-buffering-and-durability.md)
+- [ ] ログバッファ（プロセス内バッファ）の有無と WAL への書き込み単位を決定
 - [ ] チェックポイント処理
 - [ ] クラッシュリカバリ（REDO / UNDO フェーズ）
 
