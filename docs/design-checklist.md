@@ -14,14 +14,15 @@
 
 #### 1.1.1 書き込み経路（memtable + バックグラウンド Compaction）と最適化項目（[ADR 0001](adr/0001-storage-engine-b-plus-tree.md) で明記）
 
-- [ ] memtable（追記型バッファ）で書き込みを受け、バックグラウンドの Compaction で B+木セグメントへ反映するアーキテクチャ
+- [x] memtable（追記型バッファ）で書き込みを受け、バックグラウンドの Compaction で B+木セグメントへ反映するアーキテクチャ → [ADR 0001](adr/0001-storage-engine-b-plus-tree.md)
 - [x] memtable のデータ構造にスキップリストを採用（[ADR 0001](adr/0001-storage-engine-b-plus-tree.md)）
 - [x] Compaction 後のセグメントは不変の B+木として構築する（[ADR 0001](adr/0001-storage-engine-b-plus-tree.md)）
 - [ ] メモリ層でのバッファリング / 遅延書き込み
 - [ ] 書き込み順序の工夫と初期化（シーケンシャル化、ページ / セグメントの事前フォーマット）
 - [ ] デデュプリケーション（重複排除）
 - [ ] 圧縮（ページ / セグメント単位、プレフィックス圧縮）
-- [ ] 同時実行制御（Concurrency Control）の最適化
+- [x] 同時実行制御の基本モデル（単一ライター + 複数リーダー、不変セグメント、version 差し替え + 参照カウント / エポック回収） → [ADR 0001](adr/0001-storage-engine-b-plus-tree.md) / [ADR 0004](adr/0004-compaction-strategy.md)
+- [ ] 同時実行制御の最適化（細粒度ロック / ロックフリー skiplist、ラッチ粒度）
 
 #### 1.1.2 Compaction 方式と世代管理（[ADR 0004](adr/0004-compaction-strategy.md)）
 
